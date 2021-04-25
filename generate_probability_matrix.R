@@ -6,6 +6,7 @@ observations <- read_csv('filtered.csv')
 
 # for each location, calculate number of checklists and number of times each species has been observed
 effort_per_loc <- observations %>% 
+   filter(county_code == 'US-VT-001') %>%
    distinct(checklist_id, .keep_all = TRUE) %>%
    group_by(locality) %>% 
    summarize(
@@ -15,7 +16,8 @@ effort_per_loc <- observations %>%
       iqr_time = IQR(duration_minutes),
       total_distance = sum(effort_distance_km)
    ) %>% 
-   mutate(time_per_checklist = total_time / n_checklists)
+   mutate(time_per_checklist = total_time / n_checklists) %>% 
+   filter(n_checklists > 1)
 
 # graphing 
 effort_tall <- melt(effort_per_loc, id.vars="locality")
@@ -27,8 +29,10 @@ counts_per_loc <- observations %>%
    group_by(locality, common_name) %>%
    summarize(n_sp_loc = n()) %>%
    spread(key = common_name, value = n_sp_loc, fill = 0) %>%
+
    right_join(effort_per_loc, by = 'locality') %>%
    #reorder the columns by moving n_checklists before inidividual speices counts
+
    select('locality', 'n_checklists', 3:ncol(.))
 
 # counts to probabilities
