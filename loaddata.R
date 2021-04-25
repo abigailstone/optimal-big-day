@@ -22,10 +22,15 @@ cols <- c('category', 'common_name', 'observation_count',
          'approved', 'reviewed', 'checklist_id')
 
 ebird_data_filtered <- ebird_data %>%
-   # complete lists
-   filter(all_species_reported==TRUE) %>% 
-   # traveling or stationary
-   filter(protocol_code %in% c('P21', 'P22')) %>%
+   
+   filter(all_species_reported==TRUE, # complete lists
+          protocol_code %in% c('P21', 'P22'), # travelling or stationary
+          category == "species", # omit sp. %>%
+          observation_count != "0",  # "X" is fine, we just want to know presence
+          locality_type == "H",
+          
+          ) %>% 
+          
    select(cols) 
 
 write_csv(ebird_data_filtered, path='filtered.csv')
