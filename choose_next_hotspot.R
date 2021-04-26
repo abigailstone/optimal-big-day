@@ -1,4 +1,6 @@
 library(tidyverse)
+library(ggplot2)
+library(gridExtra)
 library(bench)
 
 prob_per_loc <- read_csv("prob_per_loc.csv")
@@ -69,7 +71,65 @@ prob_per_loc %>% filter(locality %in% hotspots) %>% select(species)
 result <- prob_hotspots(hotspots, prob_per_loc)
 result[names(result) %in% species]
 
+graph_prob_hotspots <- function(hotspots, prob_per_loc) {
+   
+   result <- prob_hotspots(hotspots, prob_per_loc)
+   
+   result_tbl <- tibble(
+      sp = names(result),
+      p = unname(result)
+   )
 
+   # p1 <- result_tbl %>% 
+   #    ggplot(aes(p)) + 
+   #    geom_bar()
+
+   p2 <- result_tbl %>%
+      ggplot(aes(p)) +
+      geom_density(bw = 0.005)
+
+   # grid.arrange(p1, p2)
+   
+   p2
+}
+
+
+# hotspots_list is a list of vectors of hotspots
+# e.g. list(c('Battell Woods', 'Bittersweet Falls'), c('Otter View Park', 'Hurd Grassland'))
+graph_prob_hotspots_comparison <- function(hotspots_list, prob_per_loc) {
+   
+   plots <- lapply(hotspots_list, function (x) graph_prob_hotspots(x, prob_per_loc) )
+   
+   do.call(grid.arrange, plots)
+   
+}
+
+l <- list(
+   c('Otter View Park'),
+   c('Otter View Park', 'Turkey Lane', 'Snake Mountain WMA', 'Dead Creek WMA IBA')
+)
+
+graph_prob_hotspots_comparison(l, prob_per_loc)
+# the second combination of hotspots in l should result in more species seen
+
+
+# would be nice to get these graphs layered on top of each other,
+# I think the first step would be to get them into a tbl together...
+# this very much does not work
+# prob_hotspots_comparison <- function(hotspots_list, prob_per_loc) {
+#    
+#    l <- lapply(hotspots_list, function(x) prob_hotspots(x, prob_per_loc))
+#    
+#    tbl <- tibble(
+#       sp = names(l[[1]])
+#    )
+#    
+#    for (i in l) {
+#       tbl <- mutate(tbl, unname(i))
+#    }
+#    
+#    return(tbl)
+# }
 
 
 
