@@ -132,4 +132,25 @@ graph_prob_hotspots_comparison(l, prob_per_loc)
 # }
 
 
+# freq poly plot (not normalized) for one hotspot vs several 
+# this could probably go in the function above but it works a
+# bit differently 
+hist1 <- prob_hotspots(c('Otter View Park'), prob_per_loc)
+hist2 <- prob_hotspots(c('Otter View Park', 'Turkey Lane', 'Snake Mountain WMA', 'Dead Creek WMA IBA'), prob_per_loc)
+tbl <- tibble(hist1, hist2)
+
+tbl %>% 
+   ggplot() + 
+   geom_freqpoly(mapping = aes(x = hist1,
+                               color = "one")) + 
+   geom_freqpoly(mapping = aes(x = hist2,
+                               color = "many")) + 
+   labs(x = 'Probability by species', 
+        y = 'number of species') + 
+   scale_color_manual(name = "",
+                      values = c("one" = "#56B4E9", "many" = "#E68F00"),
+                      labels = c("|H| = 1", "|H| = 4")) + 
+   theme_bw()
+
+
 
