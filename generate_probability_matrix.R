@@ -48,3 +48,41 @@ prob_per_loc <- counts_per_loc %>%
    ungroup
 
 write_csv(prob_per_loc, 'prob_per_loc.csv')
+
+
+### all of the probability matrix things in one function:
+gen_prob_per_loc <- function(observations, loc){
+   
+   # counts at each location 
+   counts_per_loc <- observations %>%
+      group_by(locality, common_name) %>%
+      summarize(n_sp_loc = n()) %>%
+      spread(key = common_name, value = n_sp_loc, fill = 0) %>%
+      right_join(effort_per_loc, by = 'locality') %>%
+      # reorder the columns by moving effort vars before individual species counts
+      select(colnames(effort_per_loc), length(colnames(effort_per_loc)):ncol(.))
+   
+   # counts to probabilities
+   prob_per_loc <- counts_per_loc %>%
+      mutate_at(.vars = vars(length(colnames(effort_per_loc)):ncol(.)),
+                .funs = list(~ . / n_checklists)) %>%
+      ungroup
+   
+   # assumes that a data folder has been created in current working directory
+   write_csv(prob_per_loc, paste('data/', loc, '_prob_per_loc.csv', sep=''))
+   
+}
+
+# create a prob_per_loc matrix for every county in the dataset
+get_probs_all_counties <- function(observations){
+   
+   counties <- unique(observations$county_code)
+   
+   for(i in counties){
+      gen_prob_per_loc(observations, i)
+   }
+   
+}
+
+get_probs_all_counties(observations)
+
