@@ -1,14 +1,11 @@
 library(tidyverse)
-source('choose_next_hotspot.R')
 
-# get just probabilities in species x hotspot matrix
-prob_per_loc <- read_csv('prob_per_loc.csv')
-prob_per_loc <- prob_per_loc %>% 
-   select(-c(n_checklists, total_time, med_time, 
-             iqr_time, total_distance, time_per_checklist))
-
-# vector of strings for hotspot names 
-hotspots <- prob_per_loc$locality
+# return a new copy of prob_per_loc without the effort columns
+drop_effort_cols <- function(prob_per_loc) {
+   prob_per_loc %>% 
+      select(-c(n_checklists, total_time, med_time, 
+                iqr_time, total_distance, time_per_checklist))
+}
 
 # horribly hacky
 # select the location with the highest probability sum 
@@ -17,10 +14,28 @@ get_first_best <- function(probs){
    probs[which.max(rowSums(probs[2:ncol(probs)])),]
 }
 
+# return the probability of seeing each species for a given set of hotspots
+# hotspots is a vector of hotspot strings, prob_per_loc is tibble
+# return type is a named vector
+prob_hotspots <- function(hotspots, prob_per_loc) {
+   
+   H <- prob_per_loc %>% 
+      filter(locality %in% hotspots) %>% 
+      select(-c(locality))
+   
+   f <- function(sp_probs) (1 - prod(dbinom(0, 1, sp_probs)))
+   
+   apply(H, 2, f)
+   
+}
+
 # Select the k optimal hotspots to visit - greedy selection
 # probs is a tibble of probabilities for each location, species 
 # k is an integer
 select_hotspots <- function(probs, k){
+   
+   # vector of strings for hotspot names 
+   hotspots <- prob_per_loc$locality
    
    # select the initial best hotspot 
    H <- get_first_best(prob_per_loc)$locality
@@ -59,6 +74,10 @@ select_hotspots <- function(probs, k){
 
 # mark(select_hotspots(prob_per_loc, 5), iterations=1)
 
-best_H <- select_hotspots(prob_per_loc, 5)
-print(best_H)
-
+if (FALSE) {
+   # get just probabilities in species x hotspot matrix
+   prob_per_loc <- read_csv('data/prob_per_loc.csv')
+   prob_per_loc <- drop_effort_cols(prob_per_loc)
+   best_H <- select_hotspots(prob_per_loc, 5)
+   print(best_H)
+}
