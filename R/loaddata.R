@@ -31,7 +31,7 @@ ebird_data_filtered <- ebird_data %>%
           
           ) %>% 
           
-   select(cols) 
+   select(all_of(cols))
 
 write_csv(ebird_data_filtered, 'data/filtered.csv')
 
