@@ -42,6 +42,8 @@ n_observations_per_hotspot <- function(observations) {
       spread(key = common_name, value = n_sp_loc, fill = 0)
 }
 
+# return a matrix with the probability of seeing 
+# each species at each hotspot
 probability_matrix <- function(observations) {
    
    effort_per_loc <- effort_per_hotspot(observations)
@@ -62,11 +64,32 @@ probability_matrix <- function(observations) {
          .funs = list(~ . / n_checklists))
 }
 
+
+# save a single prob_per_loc matrix
+write_prob_per_loc <- function(observations, loc){
+   
+   prob_per_loc <- probability_matrix(observations)
+   
+   # assumes that a data folder has been created in current working directory
+   write_csv(prob_per_loc, paste('data/', loc, '_prob_per_loc.csv', sep=''))
+   
+}
+
+# save a prob_per_loc matrix for every county in the dataset
+write_probs_all_counties <- function(observations){
+   
+   counties <- unique(observations$county_code)
+   
+   for(i in counties){
+      gen_prob_per_loc(observations, i)
+   }
+   
+}
+
 # turning this off so that sourcing the file just loads the functions
 if (FALSE) {
    observations <- read_csv('data/filtered.csv')
-   prob_per_loc <- probability_matrix(observations)
-   write_csv(prob_per_loc, 'data/prob_per_loc.csv')
+   write_probs_all_counties(observations)
 }
 
 
