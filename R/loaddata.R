@@ -5,7 +5,7 @@ library(auk)
 # auk_set_ebd_path(YOUR_EBD_PATH, overwrite=TRUE)
 input_file <- file.path('ebd_US-VT_201001_202011_relSep-2020.txt')
 # input_file <- file.path('ebd_US-VT-001_201103_202103_relMar-2021.txt') # this is the most recent data
-f_out <- 'ebd_filtered.txt'
+f_out <- 'data/ebd_filtered.txt'
 
 # auk filtering
 ebird_data <- input_file %>%
@@ -33,7 +33,7 @@ ebird_data_filtered <- ebird_data %>%
           
    select(cols) 
 
-write_csv(ebird_data_filtered, path='filtered.csv')
+write_csv(ebird_data_filtered, 'data/filtered.csv')
 
 
 

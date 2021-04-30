@@ -2,7 +2,7 @@
 library(tidyverse)
 library(reshape2)
 
-observations <- read_csv('filtered.csv')
+observations <- read_csv('data/filtered.csv')
 
 # for each location, calculate number of checklists and number of times each species has been observed
 effort_per_loc <- observations %>% 
@@ -47,4 +47,4 @@ prob_per_loc <- counts_per_loc %>%
              .funs = list(~ . / n_checklists)) %>%
    ungroup
 
-write_csv(prob_per_loc, 'prob_per_loc.csv')
+write_csv(prob_per_loc, 'data/prob_per_loc.csv')

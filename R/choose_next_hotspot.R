@@ -3,7 +3,7 @@ library(ggplot2)
 library(gridExtra)
 library(bench)
 
-prob_per_loc <- read_csv("prob_per_loc.csv")
+prob_per_loc <- read_csv("data/prob_per_loc.csv")
 
 # remove effort columns
 prob_per_loc <- prob_per_loc %>% select(-c(n_checklists, total_time, med_time, iqr_time, total_distance, time_per_checklist))

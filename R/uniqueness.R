@@ -1,6 +1,6 @@
 library(tidyverse)
 
-prob_per_loc <- read_csv('prob_per_loc.csv')
+prob_per_loc <- read_csv('data/prob_per_loc.csv')
 
 numMax <- function(x){length(which(x == max(x)))}
 
