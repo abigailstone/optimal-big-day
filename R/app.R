@@ -6,6 +6,16 @@ hotspots <- read_csv('../data/hotspots.csv')
 # Define UI for application that draws a histogram
 ui <- fluidPage(
     
+    tags$head(
+        tags$style(HTML("
+      body {
+        font-family: 'Courier New';
+      }
+      h2 {
+        font-family: 'Courier New';
+      }"))
+    ),
+    
     titlePanel("Optimal Big Day"),
     
     # Sidebar 
@@ -70,7 +80,6 @@ server <- function(input, output) {
 
         selectInput("includeThese",
                     label = "Include these: ",
-                    # choices = c("", unique(hspots)),
                     choices = unique(hspots),
                     selected = NULL,
                     multiple = TRUE)
@@ -100,11 +109,12 @@ server <- function(input, output) {
         # display the best results
         output$bestSpots <- renderUI({
             HTML(
-                paste0("Optimal hotspots in ",
-                       input$countySelect, ", ", 
+                paste0("</br> <p> Optimal hotspots in ",
+                       input$countySelect, " County, ", 
                        input$stateSelect,
-                       ":</br>", 
-                       paste(bestH, collapse="</br>"))
+                       ":</br> <ul> <li>", 
+                       paste(bestH, collapse="</li> <li>"),
+                       "</li><ul></p>")
             )
         })
         
@@ -112,12 +122,15 @@ server <- function(input, output) {
         pin_locations <- hotspots %>% 
             filter(locality %in% bestH) 
         
-        # update pins on map
+        # update pins and map view
         leafletProxy('map') %>% 
             clearMarkers() %>%
             addMarkers(lng = pin_locations$longitude, 
                        lat = pin_locations$latitude,
-                       popup = paste("<b>", pin_locations$locality, "</b><br>"))
+                       popup = paste("<b>", pin_locations$locality, "</b><br>")) %>% 
+            setView(lng = mean(pin_locations$longitude),
+                    lat = mean(pin_locations$latitude),
+                    9)
             
         
     })
