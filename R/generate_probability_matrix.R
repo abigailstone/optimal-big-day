@@ -68,6 +68,11 @@ probability_matrix <- function(observations) {
 # save a single prob_per_loc matrix
 write_prob_per_loc <- function(observations, loc){
    
+   # filter to this county
+   observations <- observations %>%
+      filter(county_code == loc)
+   
+   # compute probability matrix
    prob_per_loc <- probability_matrix(observations)
    
    # assumes that a data folder has been created in current working directory
@@ -80,7 +85,7 @@ write_probs_all_counties <- function(observations){
    
    counties <- unique(observations$county_code)
    
-   for(i in counties){
+   for(i in counties){ 
       write_prob_per_loc(observations, i)
    }
    
