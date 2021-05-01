@@ -32,18 +32,21 @@ prob_hotspots <- function(hotspots, prob_per_loc) {
 # Select the k optimal hotspots to visit - greedy selection
 # probs is a tibble of probabilities for each location, species 
 # k is an integer
-select_hotspots <- function(probs, k){
+select_hotspots <- function(probs, k, H=NULL){
    
    # vector of strings for hotspot names 
    hotspots <- probs$locality
    
-   # select the initial best hotspot 
-   H <- get_first_best(probs)$locality
+   if (is.null(H)){
+      # select the initial best hotspot 
+      H <- get_first_best(probs)$locality
+   } 
+   
    remaining_loc <- hotspots[!(hotspots %in% H)]
    
    # iterate for the number of hotspots we want to select
-   for (i in 1:k-1){
-      
+   for (i in 1:(k-length(H))){
+   
       remaining_probs <- probs %>% 
          filter(locality %in% remaining_loc) 
       
@@ -60,7 +63,6 @@ select_hotspots <- function(probs, k){
             current_best <- s 
             current_h <- h
          }
-
       }
 
       # add the best to our collection of optimal hotspots 
