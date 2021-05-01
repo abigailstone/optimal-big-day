@@ -1,5 +1,5 @@
 library(shiny)
-
+library(leaflet)
 
 shinyUI(fluidPage(
 
@@ -8,26 +8,30 @@ shinyUI(fluidPage(
     # Sidebar 
     sidebarLayout(
         
-        # note: these can't rely on ebird_data going forward 
-        # since we won't include that data in the shiny upload 
-        # we'll probably need a file/function that matches county codes to names
         sidebarPanel(
-            selectInput("state",
+            selectInput("stateSelect",
                         label = "Select a state:",
-                        choices = unique(ebird_data$state)),
-            selectInput("county",
-                        label = "Select a county:",
-                        choices = unique(ebird_data_filtered$county)),
+                        choices = unique(countycodes$state)),
+            
+            selectInput("countySelect", 
+                        label = "Select a county:", 
+                        choices = unique(countycodes$county)),
+            
             actionButton("goButton", "Go!")
         ),
         
         # main layout!
         mainPanel(
+            
+            leafletOutput("map"),
+            
             p(
                 "At some point we'll put meaningful things here!"
             ), 
             
-            textOutput("buttonResponse")
+            textOutput("buttonResponse"), 
+            
+            textOutput("bestSpots")
         )
         
     )
