@@ -35,10 +35,10 @@ prob_hotspots <- function(hotspots, prob_per_loc) {
 select_hotspots <- function(probs, k){
    
    # vector of strings for hotspot names 
-   hotspots <- prob_per_loc$locality
+   hotspots <- probs$locality
    
    # select the initial best hotspot 
-   H <- get_first_best(prob_per_loc)$locality
+   H <- get_first_best(probs)$locality
    remaining_loc <- hotspots[!(hotspots %in% H)]
    
    # iterate for the number of hotspots we want to select
