@@ -12,13 +12,18 @@ ui <- fluidPage(
     sidebarLayout(
         
         sidebarPanel(
-            selectInput("stateSelect",
-                        label = "Select a state:",
-                        choices = unique(countycodes$state)),
             
-            selectInput("countySelect", 
-                        label = "Select a county:", 
-                        choices = unique(countycodes$county)),
+            htmlOutput("stateSelect"),
+            
+            htmlOutput("countySelect"),
+            
+            numericInput("nHotspots",
+                         label = "Number of hotspots to visit:",
+                         value = 5,
+                         min = 1, 
+                         max = 15),
+            
+            htmlOutput("includeThese"),
             
             actionButton("goButton", "Go!")
         ),
@@ -40,6 +45,37 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     
+    
+    output$stateSelect <- renderUI({
+        selectInput("stateSelect",
+                    label = "Select a state: ", 
+                    choices = as.character(unique(countycodes$state)))
+    })
+    
+    
+    output$countySelect <- renderUI({
+        counties <- countycodes[countycodes$state == input$stateSelect, "county"]
+        
+        selectInput("countySelect",
+                    label = "Select a county:",
+                    choices = unique(counties))
+    })
+    
+    output$includeThese <- renderUI({
+        ccode <- countycodes %>%
+            filter(county == input$countySelect) %>%
+            .[[3]]
+
+        hspots <- hotspots[hotspots$county_code == ccode, "locality"]
+
+        selectInput("includeThese",
+                    label = "Include these: ",
+                    # choices = c("", unique(hspots)),
+                    choices = unique(hspots),
+                    selected = NULL,
+                    multiple = TRUE)
+    })
+    
     observeEvent(input$goButton, {
         
         # get the county code for the current selection
@@ -54,7 +90,12 @@ server <- function(input, output) {
             drop_effort_cols()
         
         # filtering
-        bestH <- select_hotspots(prob_per_loc, 5)
+        visitThese <- hotspots %>%
+            filter(locality %in% input$includeThese) %>%
+            .[[2]]
+        
+        # select best hotspots
+        bestH <- select_hotspots(prob_per_loc, input$nHotspots, visitThese)
         
         # display the best results
         output$bestSpots <- renderUI({
@@ -84,7 +125,7 @@ server <- function(input, output) {
     
     output$map <- renderLeaflet({
         
-        # placeholder?
+        # TODO: update zoom on county select
         leaflet() %>% 
             addTiles() %>% 
             setView(-73, 44, 7)
