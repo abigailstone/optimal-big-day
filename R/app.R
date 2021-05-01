@@ -1,6 +1,7 @@
 library(shiny)
 
 countycodes <- read_csv('../data/counties.csv')
+hotspots <- read_csv('../data/hotspots.csv')
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -27,13 +28,10 @@ ui <- fluidPage(
             
             leafletOutput("map"),
             
-            p(
-                "At some point we'll put meaningful things here!"
-            ), 
+            textOutput("status"), 
             
-            textOutput("buttonResponse"), 
-            
-            textOutput("bestSpots")
+            # textOutput("bestSpots")
+            htmlOutput("bestSpots")
         )
         
     )
@@ -51,7 +49,6 @@ server <- function(input, output) {
         
         # get the prob_per_loc for this county
         filename <- paste('../data/', ccode, '_prob_per_loc.csv', sep='')
-        print(filename)
         
         prob_per_loc <- read_csv(filename) %>% 
             drop_effort_cols()
@@ -59,16 +56,28 @@ server <- function(input, output) {
         # filtering
         bestH <- select_hotspots(prob_per_loc, 5)
         
-        
-        # for testing 
-        output$buttonResponse <-renderText({
-            paste(input$countySelect, input$stateSelect, sep=", ")
+        # display the best results
+        output$bestSpots <- renderUI({
+            HTML(
+                paste0("Optimal hotspots in ",
+                       input$countySelect, ", ", 
+                       input$stateSelect,
+                       ":</br>", 
+                       paste(bestH, collapse="</br>"))
+            )
         })
         
-        # TODO: output formatting
-        output$bestSpots <- renderText({
-            bestH
-        })
+        # get hotspot locations
+        pin_locations <- hotspots %>% 
+            filter(locality %in% bestH) 
+        
+        # update pins on map
+        leafletProxy('map') %>% 
+            clearMarkers() %>%
+            addMarkers(lng = pin_locations$longitude, 
+                       lat = pin_locations$latitude,
+                       popup = paste("<b>", pin_locations$locality, "</b><br>"))
+            
         
     })
     
