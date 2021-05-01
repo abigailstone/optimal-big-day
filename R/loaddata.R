@@ -45,7 +45,7 @@ countycodes <- ebird_data %>%
 # hotspot list 
 loc_list <- ebird_data %>% 
    filter(locality_type == "H") %>%
-   group_by(locality) %>% 
+   group_by(county_code, locality) %>% 
    summarise(latitude = first(latitude),
              longitude = first(longitude)) %>%
    write_csv('data/hotspots.csv')
