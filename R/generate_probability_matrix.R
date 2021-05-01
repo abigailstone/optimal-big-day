@@ -81,7 +81,7 @@ write_probs_all_counties <- function(observations){
    counties <- unique(observations$county_code)
    
    for(i in counties){
-      gen_prob_per_loc(observations, i)
+      write_prob_per_loc(observations, i)
    }
    
 }
