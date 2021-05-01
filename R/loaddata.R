@@ -15,11 +15,12 @@ ebird_data <- input_file %>%
    auk_filter(file = f_out, overwrite = TRUE) %>%
    read_ebd()
 
+# columns to keep for filtering
 cols <- c('category', 'common_name', 'observation_count',
          'county_code', 'locality', 'locality_id', 'locality_type',
          'latitude', 'longitude', 'observation_date', 'time_observations_started',
          'protocol_code', 'duration_minutes', 'effort_distance_km', 'all_species_reported',
-         'approved', 'reviewed', 'checklist_id')
+         'approved', 'reviewed', 'checklist_id', 'state', 'county')
 
 ebird_data_filtered <- ebird_data %>%
    
@@ -30,11 +31,16 @@ ebird_data_filtered <- ebird_data %>%
           locality_type == "H",
           
           ) %>% 
-          
    select(all_of(cols))
 
 write_csv(ebird_data_filtered, 'data/filtered.csv')
 
 
+# county list 
+countycodes <- ebird_data %>% 
+   group_by(state, county) %>% 
+   summarise(county_code = first(county_code))
+
+write_csv(countycodes, 'data/counties.csv')
 
 
