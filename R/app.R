@@ -1,7 +1,11 @@
+library(tidyverse)
 library(shiny)
+library(leaflet)
 
-countycodes <- read_csv('../data/counties.csv')
-hotspots <- read_csv('../data/hotspots.csv')
+source('R/find_hotspots.R')
+
+countycodes <- read_csv('data/counties.csv')
+hotspots <- read_csv('data/hotspots.csv')
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -93,7 +97,7 @@ server <- function(input, output) {
             .[[3]]
         
         # get the prob_per_loc for this county
-        filename <- paste('../data/', ccode, '_prob_per_loc.csv', sep='')
+        filename <- paste('data/', ccode, '_prob_per_loc.csv', sep='')
         
         prob_per_loc <- read_csv(filename) %>% 
             drop_effort_cols()
