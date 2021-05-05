@@ -20,20 +20,6 @@ effort_per_hotspot <- function(observations) {
       filter(n_checklists > 1)
 }
 
-# graphing effort variables
-# effort_tall <- melt(effort_per_loc, id.vars="locality")
-# effort_tall %>% ggplot(aes(value)) + 
-#    geom_density() + 
-#    facet_wrap(~variable, scales = "free")
-
-# does total time correlate with number of checklists for each hotspot?
-# effort_per_loc %>% 
-#    ggplot(aes(n_checklists, total_time)) + 
-#    geom_point() + 
-#    stat_smooth()
-
-
-
 # return a tibble with number of checklists reporting each species at each hotspot
 n_observations_per_hotspot <- function(observations) {
    observations %>%
