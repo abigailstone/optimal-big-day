@@ -1,7 +1,9 @@
-library(tidyverse)
-library(auk)
+# library(tidyverse)
+# library(auk)
 
 # load all of the data in the auk_ebd path 
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
 write_data_main <- function(files){
    
    ebd_data <- NULL
@@ -19,16 +21,16 @@ write_data_main <- function(files){
       
       # auk filtering
       data <- f %>%
-         auk_ebd() %>%
-         auk_complete() %>%
-         auk_date(date = c('*-05-01', '*-05-15')) %>%
-         auk_protocol(c("Stationary", "Traveling")) %>% 
-         auk_filter(file = f_out, overwrite = TRUE, keep = cols) %>%
-         read_ebd()
+         auk::auk_ebd() %>%
+         auk::auk_complete() %>%
+         auk::auk_date(date = c('*-05-01', '*-05-15')) %>%
+         auk::auk_protocol(c("Stationary", "Traveling")) %>% 
+         auk::auk_filter(file = f_out, overwrite = TRUE, keep = cols) %>%
+         auk::read_ebd()
       
       # filtering that auk cannot do 
       filtered <- data %>%
-         filter(locality_type == "H")
+         dplyr::filter(.data$locality_type == "H")
       
       # join to existing data 
       if (is.null(ebd_data)){
@@ -40,37 +42,39 @@ write_data_main <- function(files){
    }
    
    # save the filtered data
-   write_csv(ebd_data, 'data/filtered.csv')
+   readr::write_csv(ebd_data, 'data/filtered.csv')
    
 }
 
 # county list 
+#' @importFrom rlang .data
 write_county_list <- function(data) {
    data %>% 
-      group_by(state, county) %>% 
-      summarise(county_code = first(county_code),
+      dplyr::group_by(.data$state, .data$county) %>% 
+      dplyr::summarise(county_code = dplyr::first(.data$county_code),
                 .groups = 'drop') %>% 
-      write_csv('data/counties.csv') 
+      readr::write_csv('data/counties.csv') 
 }
 
 # hotspot list 
+#' @importFrom rlang .data
 write_hotspot_list <- function(data) {
    data %>% 
-      group_by(county_code, locality) %>% 
-      summarise(latitude = first(latitude),
-                longitude = first(longitude),
+      dplyr::group_by(.data$county_code, .data$locality) %>% 
+      dplyr::summarise(latitude = dplyr::first(.data$latitude),
+                longitude = dplyr::first(.data$longitude),
                 .groups = 'drop') %>%
-      write_csv('data/hotspots.csv')
+      readr::write_csv('data/hotspots.csv')
 }
 
 
 if(FALSE){
    
-   if (is.na(auk_get_ebd_path())) {
-      stop("please set ebd path with auk_set_ebd_path(YOUR_EBD_PATH)")
+   if (is.na(auk::auk_get_ebd_path())) {
+      stop("please set ebd path with auk::auk_set_ebd_path(YOUR_EBD_PATH)")
    }
    
-   files <- list.files(auk_get_ebd_path(), pattern='*.txt')
+   files <- list.files(auk::auk_get_ebd_path(), pattern='*.txt')
    write_data_main(files)
    
    data <- read_csv('data/filtered.csv')

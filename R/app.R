@@ -2,10 +2,10 @@ library(tidyverse)
 library(shiny)
 library(leaflet)
 
-source('R/find_hotspots.R')
+# source('R/find_hotspots.R')
 
-countycodes <- read_csv('data/counties.csv')
-hotspots <- read_csv('data/hotspots.csv')
+# countycodes <- read_csv('data/counties.csv')
+# hotspots <- read_csv('data/hotspots.csv')
 
 # Define UI for application that draws a histogram
 ui <-tagList(
@@ -154,4 +154,4 @@ server <- function(input, output) {
 }
 
 # Run the application 
-shinyApp(ui = ui, server = server)
+# shinyApp(ui = ui, server = server)

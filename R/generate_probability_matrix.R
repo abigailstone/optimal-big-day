@@ -1,31 +1,34 @@
 # filtered data to species/hotspot probability matrix
-library(tidyverse)
-library(reshape2)
+# library(tidyverse)
 
 # return tibble with effort information for each hotspot
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 effort_per_hotspot <- function(observations) {
    observations %>% 
       # filter(county_code == 'US-VT-001') %>%
-      mutate(effort_distance_km = ifelse(is.na(effort_distance_km), 0, effort_distance_km)) %>% # handle stationary lists
-      distinct(checklist_id, .keep_all = TRUE) %>%
-      group_by(locality) %>% 
-      summarize(
-         n_checklists = n(),
-         total_time = sum(duration_minutes),
-         med_time = median(duration_minutes),
-         iqr_time = IQR(duration_minutes),
-         total_distance = sum(effort_distance_km)
+      dplyr::mutate(effort_distance_km = ifelse(is.na(.data$effort_distance_km), 0, .data$effort_distance_km)) %>% # handle stationary lists
+      dplyr::distinct(.data$checklist_id, .keep_all = TRUE) %>%
+      dplyr::group_by(.data$locality) %>% 
+      dplyr::summarize(
+         n_checklists = dplyr::n(),
+         total_time = sum(.data$duration_minutes),
+         med_time = stats::median(.data$duration_minutes),
+         iqr_time = stats::IQR(.data$duration_minutes),
+         total_distance = sum(.data$effort_distance_km)
       ) %>% 
-      mutate(time_per_checklist = total_time / n_checklists) %>% 
-      filter(n_checklists > 1)
+      dplyr::mutate(time_per_checklist = .data$total_time / .data$n_checklists) %>% 
+      dplyr::filter(.data$n_checklists > 1)
 }
 
 # return a tibble with number of checklists reporting each species at each hotspot
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
 n_observations_per_hotspot <- function(observations) {
    observations %>%
-      group_by(locality, common_name) %>%
-      summarize(n_sp_loc = n(), .groups = "drop") %>%
-      spread(key = common_name, value = n_sp_loc, fill = 0)
+      dplyr::group_by(.data$locality, .data$common_name) %>%
+      dplyr::summarize(n_sp_loc = n(), .groups = "drop") %>%
+      tidyr::spread(key = .data$common_name, value = .data$n_sp_loc, fill = 0)
 }
 
 # return a matrix with the probability of seeing 
@@ -52,17 +55,18 @@ probability_matrix <- function(observations) {
 
 
 # save a single prob_per_loc matrix
+
+#' @importFrom rlang .data
 write_prob_per_loc <- function(observations, loc){
    
    # filter to this county
-   observations <- observations %>%
-      filter(county_code == loc)
+   observations <- dplyr::filter(observations, .data$county_code == loc)
    
    # compute probability matrix
    prob_per_loc <- probability_matrix(observations)
    
    # assumes that a data folder has been created in current working directory
-   write_csv(prob_per_loc, paste('data/', loc, '_prob_per_loc.csv', sep=''))
+   readr::write_csv(prob_per_loc, paste('data/', loc, '_prob_per_loc.csv', sep=''))
    
 }
 
