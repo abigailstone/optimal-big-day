@@ -2,7 +2,7 @@ library(tidyverse)
 library(auk)
 
 # load all of the data in the auk_ebd path 
-load_data_main <- function(files){
+write_data_main <- function(files){
    
    ebd_data <- NULL
    f_out <- 'data/ebd_filtered.txt'
@@ -45,21 +45,22 @@ load_data_main <- function(files){
 }
 
 # county list 
-get_county_list <- function(data){
-   countycodes <- data %>% 
+write_county_list <- function(data) {
+   data %>% 
       group_by(state, county) %>% 
-      summarise(county_code = first(county_code)) %>% 
+      summarise(county_code = first(county_code),
+                .groups = 'drop') %>% 
       write_csv('data/counties.csv') 
 }
 
 # hotspot list 
-get_hotspot_list <- function(data){
-   loc_list <- data %>% 
+write_hotspot_list <- function(data) {
+   data %>% 
       group_by(county_code, locality) %>% 
       summarise(latitude = first(latitude),
-                longitude = first(longitude)) %>%
+                longitude = first(longitude),
+                .groups = 'drop') %>%
       write_csv('data/hotspots.csv')
-   
 }
 
 
@@ -70,11 +71,11 @@ if(FALSE){
    }
    
    files <- list.files(auk_get_ebd_path(), pattern='*.txt')
-   load_data_main(files)
+   write_data_main(files)
    
    data <- read_csv('data/filtered.csv')
-   get_county_list(data)
-   get_hotspot_list(data)
+   write_county_list(data)
+   write_hotspot_list(data)
    
    # clear global variables 
    rm(list = ls())
