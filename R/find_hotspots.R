@@ -1,22 +1,36 @@
 library(tidyverse)
 
-# return a new copy of prob_per_loc without the effort columns
+#' Drop effort columns from prob_per_loc
+#' 
+#' @param prob_per_loc A tibble with the probability of observing each species at each locality
+#' @return A new copy of prob_per_loc without the effort columns
+#' @examples
+#' drop_effort_cols(prob_per_loc)
 drop_effort_cols <- function(prob_per_loc) {
    prob_per_loc %>% 
       select(-c(n_checklists, total_time, med_time, 
                 iqr_time, total_distance, time_per_checklist))
 }
 
-# horribly hacky
-# select the location with the highest probability sum 
-# probs is a tibble, locations by species
-get_first_best <- function(probs){
+#' Select the location with the highest probability sum 
+#' 
+#' @param prob_per_loc A tibble with the probability of observing each species at each locality
+#' @return A tibble row corresponding to the location with the highest expected number of species
+#' @examples 
+#' get_first_best(drop_effort_cols(prob_per_loc))
+get_first_best <- function(probs) {
    probs[which.max(rowSums(probs[2:ncol(probs)])),]
 }
 
-# return the probability of seeing each species for a given set of hotspots
-# hotspots is a vector of hotspot strings, prob_per_loc is tibble
-# return type is a named vector
+
+#' Calculate the probability of seeing each species for a given set of hotspots
+#' 
+#' @param hotspots A character vector of hotspot names
+#' @param prob_per_loc A tibble with the probability of observing each species at each locality
+#' @return A named numerical vector of the probability of observing each species at the given combination of hotspots
+#' @examples
+#' hotspots <- c('Otter View Park', 'Button Bay State Park')
+#' prob_hotspots(hotspots, prob_per_loc)
 prob_hotspots <- function(hotspots, prob_per_loc) {
    
    H <- prob_per_loc %>% 
@@ -29,9 +43,14 @@ prob_hotspots <- function(hotspots, prob_per_loc) {
    
 }
 
-# Select the k optimal hotspots to visit - greedy selection
-# probs is a tibble of probabilities for each location, species 
-# k is an integer
+#' Greedy selection algorithm to select the k optimal hotspots to visit
+#' 
+#' @param probs A tibble with the probability of observing each species at each locality
+#' @param k The number of hotspots you want to visit
+#' @param H A character vector of the hotspots you definitely want to visit
+#' @examples 
+#' hotspots <- c('Otter View Park', 'Button Bay State Park')
+#' select_hotspots(prob_per_loc, 5, hotspots)
 select_hotspots <- function(probs, k, H=NULL){
    
    # vector of strings for hotspot names 
@@ -73,8 +92,6 @@ select_hotspots <- function(probs, k, H=NULL){
    
    return(H)
 }
-
-# mark(select_hotspots(prob_per_loc, 5), iterations=1)
 
 if (FALSE) {
    # get just probabilities in species x hotspot matrix
