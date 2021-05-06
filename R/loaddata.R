@@ -11,11 +11,11 @@ f_out <- 'data/ebd_filtered.txt'
 
 # columns to keep for filtering
 cols <- c('group_identifier', 'sampling_event_identifier', 'observer_id',
-          'scientific_name', 'observation_count', 'category', 'common_name',
+          'scientific_name', 'observation_count', 'common_name',
           'county_code', 'locality', 'locality_id', 'locality_type',
-          'latitude', 'longitude', 'observation_date', 'protocol_code', 
+          'latitude', 'longitude', 'observation_date',
           'time_observations_started', 'duration_minutes', 'effort_distance_km', 
-          'all_species_reported', 'approved', 'reviewed', 'state', 'county')
+          'all_species_reported', 'state', 'county')
 
 # auk filtering
 ebird_data <- input_file %>%
