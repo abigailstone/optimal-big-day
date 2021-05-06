@@ -2,58 +2,67 @@ library(tidyverse)
 library(shiny)
 library(leaflet)
 
+<<<<<<< HEAD
+
+countycodes <- read_csv('../data/counties.csv')
+hotspots <- read_csv('../data/hotspots.csv')
+=======
 source('R/find_hotspots.R')
 
 countycodes <- read_csv('data/counties.csv')
 hotspots <- read_csv('data/hotspots.csv')
+>>>>>>> 00eebf71627f0cca72b26b566975be52e0199270
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-    
-    tags$head(
-        tags$style(HTML("
+ui <-tagList(
+  tags$head(
+    tags$style(HTML("
       body {
         font-family: 'Courier New';
       }
       h2 {
         font-family: 'Courier New';
       }"))
-    ),
-    
-    titlePanel("Optimal Big Day"),
-    
-    # Sidebar 
-    sidebarLayout(
-        
+  ),
+  
+  navbarPage(
+    "Optimal Big Day",
+    tabPanel(
+      "Home", 
+      sidebarLayout(
         sidebarPanel(
-            
-            htmlOutput("stateSelect"),
-            
-            htmlOutput("countySelect"),
-            
-            numericInput("nHotspots",
-                         label = "Number of hotspots to visit:",
-                         value = 5,
-                         min = 1, 
-                         max = 15),
-            
-            htmlOutput("includeThese"),
-            
-            actionButton("goButton", "Go!")
+          htmlOutput("stateSelect"),
+          
+          htmlOutput("countySelect"),
+          
+          numericInput("nHotspots",
+                       label = "Number of hotspots to visit:",
+                       value = 5,
+                       min = 1, 
+                       max = 15),
+          
+          htmlOutput("includeThese"),
+          
+          actionButton("goButton", "Go!")
         ),
-        
-        # main layout!
         mainPanel(
-            
-            leafletOutput("map"),
-            
-            textOutput("status"), 
-            
-            # textOutput("bestSpots")
-            htmlOutput("bestSpots")
+          leafletOutput("map"),
+          
+          textOutput("status"), 
+          
+          # textOutput("bestSpots")
+          htmlOutput("bestSpots")
         )
-        
-    )
+      )
+    ), # end main tab panel 
+    tabPanel(
+      "About",
+      p("hello, world!"),
+      p(
+      tags$a(href="https://github.com/abigailstone/optimal-big-day", "Source code")
+      )
+    ) # end about tab panel
+  )
 )
 
 # Define server logic required to draw a histogram
