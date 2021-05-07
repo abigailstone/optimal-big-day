@@ -27,7 +27,7 @@ effort_per_hotspot <- function(observations) {
 n_observations_per_hotspot <- function(observations) {
    observations %>%
       dplyr::group_by(.data$locality, .data$common_name) %>%
-      dplyr::summarize(n_sp_loc = n(), .groups = "drop") %>%
+      dplyr::summarize(n_sp_loc = dplyr::n(), .groups = "drop") %>%
       tidyr::spread(key = .data$common_name, value = .data$n_sp_loc, fill = 0)
 }
 
@@ -40,10 +40,10 @@ probability_matrix <- function(observations) {
    
    # join species frequency and effort information
    counts_and_effort_per_loc <- effort_per_loc %>%
-      left_join(counts_per_loc, by = "locality")   
+      dplyr::left_join(counts_per_loc, by = "locality")   
    
    counts_and_effort_per_loc %>% 
-      mutate_at(
+      dplyr::mutate_at(
          
          # for only species columns (exclude locality and effort columns)
          .vars = setdiff(colnames(counts_and_effort_per_loc), 

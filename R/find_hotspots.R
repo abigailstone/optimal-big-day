@@ -47,17 +47,18 @@ prob_hotspots <- function(hotspots, prob_per_loc) {
 #' @param k The number of hotspots you want to visit
 #' @param H A character vector of the hotspots you definitely want to visit
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @examples 
 #' # hotspots <- c('Otter View Park', 'Button Bay State Park')
 #' # select_hotspots(prob_per_loc, 5, hotspots)
 select_hotspots <- function(probs, k, H=NULL){
    
    # vector of strings for hotspot names 
-   hotspots <- probs$locality
+   hotspots <- probs[['locality']]
    
    if (is.null(H)){
       # select the initial best hotspot 
-      H <- get_first_best(probs)$locality
+      H <- get_first_best(probs)[['locality']]
    } 
    
    remaining_loc <- hotspots[!(hotspots %in% H)]
@@ -66,14 +67,14 @@ select_hotspots <- function(probs, k, H=NULL){
    for (i in 1:(k-length(H))){
    
       remaining_probs <- probs %>% 
-         dplyr::filter(locality %in% remaining_loc) 
+         dplyr::filter(.data$locality %in% remaining_loc) 
       
       # initialize variables
       current_h <- NULL 
       current_best <- 0
       
       # pick the next best hotspot using prob_hotspots 
-      for(h in remaining_probs$locality){
+      for(h in remaining_probs[['locality']]){
          s <- sum(prob_hotspots(c(H, h), remaining_probs))
          
          # update the current best result for this comparison
