@@ -1,14 +1,6 @@
-library(tidyverse)
-library(shiny)
-library(leaflet)
-
-# source('R/find_hotspots.R')
-
-# countycodes <- read_csv('data/counties.csv')
-# hotspots <- read_csv('data/hotspots.csv')
-
 # Define UI for application that draws a histogram
-ui <-tagList(
+#' @import shiny
+ui <- function() {tagList(
   tags$head(
     tags$style(HTML("
       body {
@@ -40,7 +32,7 @@ ui <-tagList(
           actionButton("goButton", "Go!")
         ),
         mainPanel(
-          leafletOutput("map"),
+          leaflet::leafletOutput("map"),
           
           textOutput("status"), 
           
@@ -57,12 +49,17 @@ ui <-tagList(
       )
     ) # end about tab panel
   )
-)
+)}
 
 # Define server logic required to draw a histogram
+#' @import shiny 
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 server <- function(input, output) {
-    
-    
+  
+  countycodes <- readr::read_csv('data_local/counties.csv')
+  hotspots <- readr::read_csv('data_local/hotspots.csv')
+  
     output$stateSelect <- renderUI({
         selectInput("stateSelect",
                     label = "Select a state: ", 
@@ -71,18 +68,17 @@ server <- function(input, output) {
     
     
     output$countySelect <- renderUI({
-        counties <- countycodes[countycodes$state == input$stateSelect, "county"]
-        
+        counties <- as.list(countycodes[countycodes$state == input$stateSelect, "county"])
+
         selectInput("countySelect",
                     label = "Select a county:",
                     choices = unique(counties))
     })
     
     output$includeThese <- renderUI({
-        ccode <- countycodes %>%
-            filter(county == input$countySelect) %>%
-            .[[3]]
 
+        ccode <- countycodes[countycodes$county == input$countySelect, "county_code"]
+      
         hspots <- hotspots[hotspots$county_code == ccode, "locality"]
 
         selectInput("includeThese",
@@ -93,22 +89,19 @@ server <- function(input, output) {
     })
     
     observeEvent(input$goButton, {
-        
+
         # get the county code for the current selection
-        ccode <- countycodes %>% 
-            filter(county == input$countySelect) %>% 
-            .[[3]]
+        ccode <- countycodes[countycodes$county == input$countySelect, "county_code"] 
         
         # get the prob_per_loc for this county
-        filename <- paste('data/', ccode, '_prob_per_loc.csv', sep='')
+        filename <- paste('data_local/', ccode, '_prob_per_loc.csv', sep='')
         
-        prob_per_loc <- read_csv(filename) %>% 
+        prob_per_loc <- readr::read_csv(filename) %>% 
             drop_effort_cols()
         
         # filtering
-        visitThese <- hotspots %>%
-            filter(locality %in% input$includeThese) %>%
-            .[[2]]
+        visitThese <- (hotspots %>%
+            dplyr::filter(.data$locality %in% input$includeThese))[[2]]
         
         # select best hotspots
         bestH <- select_hotspots(prob_per_loc, input$nHotspots, visitThese)
@@ -127,31 +120,33 @@ server <- function(input, output) {
         
         # get hotspot locations
         pin_locations <- hotspots %>% 
-            filter(locality %in% bestH) 
+            dplyr::filter(.data$locality %in% bestH) 
         
         # update pins and map view
-        leafletProxy('map') %>% 
-            clearMarkers() %>%
-            addMarkers(lng = pin_locations$longitude, 
+        leaflet::leafletProxy('map') %>% 
+            leaflet::clearMarkers() %>%
+            leaflet::addMarkers(lng = pin_locations$longitude, 
                        lat = pin_locations$latitude,
                        popup = paste("<b>", pin_locations$locality, "</b><br>")) %>% 
-            setView(lng = mean(pin_locations$longitude),
-                    lat = mean(pin_locations$latitude),
-                    9)
-            
+            leaflet::setView(lng = mean(pin_locations$longitude),
+                        lat = mean(pin_locations$latitude),
+                        9)
+                
         
     })
     
     
-    output$map <- renderLeaflet({
+    output$map <- leaflet::renderLeaflet({
         
         # TODO: update zoom on county select
-        leaflet() %>% 
-            addTiles() %>% 
-            setView(-73, 44, 7)
+        leaflet::leaflet() %>% 
+            leaflet::addTiles() %>% 
+            leaflet::setView(-73, 44, 7)
     })
     
 }
 
 # Run the application 
-# shinyApp(ui = ui, server = server)
+myApp <- function(ui, server) {
+  shiny::shinyApp(ui = ui, server = server)
+}
