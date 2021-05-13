@@ -68,7 +68,6 @@ server <- function(input, output) {
     
     
     output$countySelect <- renderUI({
-      req(input$stateSelect)
         counties <- as.list(countycodes[countycodes$state == input$stateSelect, "county"])
 
         selectInput("countySelect",
@@ -77,7 +76,6 @@ server <- function(input, output) {
     })
     
     output$includeThese <- renderUI({
-        req(input$countySelect)
 
         ccode <- countycodes[countycodes$county == input$countySelect, "county_code"]
       
