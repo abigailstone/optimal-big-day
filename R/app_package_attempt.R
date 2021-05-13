@@ -1,14 +1,4 @@
-# library(tidyverse)
-# library(shiny)
-# library(leaflet)
-
-# source('R/find_hotspots.R')
-
-# countycodes <- read_csv('data/counties.csv')
-# hotspots <- read_csv('data/hotspots.csv')
-
 # Define UI for application that draws a histogram
-
 #' @import shiny
 ui <- function() {tagList(
   tags$head(
@@ -88,10 +78,8 @@ server <- function(input, output) {
     
     output$includeThese <- renderUI({
         req(input$countySelect)
-        # ccode <- countycodes %>%
-        #     dplyr::filter(.data$county == input$countySelect)[[3]]
+
         ccode <- countycodes[countycodes$county == input$countySelect, "county_code"]
-      
       
         hspots <- hotspots[hotspots$county_code == ccode, "locality"]
 
@@ -105,10 +93,7 @@ server <- function(input, output) {
     observeEvent(input$goButton, {
 
         # get the county code for the current selection
-        # ccode <- countycodes %>% 
-        #     dplyr::filter(.data$county == input$countySelect)[[3]]
-      
-        ccode <- countycodes[countycodes$county == input$countySelect, "countySelect"]
+        ccode <- countycodes[countycodes$county == input$countySelect, "county_code"] 
         
         # get the prob_per_loc for this county
         filename <- paste('data_local/', ccode, '_prob_per_loc.csv', sep='')
@@ -117,8 +102,8 @@ server <- function(input, output) {
             drop_effort_cols()
         
         # filtering
-        visitThese <- hotspots %>%
-            dplyr::filter(.data$locality %in% input$includeThese)[[2]]
+        visitThese <- (hotspots %>%
+            dplyr::filter(.data$locality %in% input$includeThese))[[2]]
         
         # select best hotspots
         bestH <- select_hotspots(prob_per_loc, input$nHotspots, visitThese)
