@@ -1,5 +1,4 @@
 # filtered data to species/hotspot probability matrix
-# library(tidyverse)
 
 # return tibble with effort information for each hotspot
 #' @importFrom magrittr %>%

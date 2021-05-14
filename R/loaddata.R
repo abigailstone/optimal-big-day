@@ -1,6 +1,3 @@
-# library(tidyverse)
-# library(auk)
-
 # load all of the data in the auk_ebd path 
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%

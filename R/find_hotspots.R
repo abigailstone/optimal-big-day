@@ -1,5 +1,3 @@
-# library(tidyverse)
-
 #' Drop effort columns from prob_per_loc
 #' 
 #' @param prob_per_loc A tibble with the probability of observing each species at each locality
