@@ -1,6 +1,9 @@
 # filtered data to species/hotspot probability matrix
 
-# return tibble with effort information for each hotspot
+#' Calculate effort information for each hotspot
+#' 
+#' @param observations A tibble of eBird data
+#' @return A tibble with statistics on the sampling effort at each hotspot
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 effort_per_hotspot <- function(observations) {
@@ -20,7 +23,10 @@ effort_per_hotspot <- function(observations) {
       dplyr::filter(.data$n_checklists > 1)
 }
 
-# return a tibble with number of checklists reporting each species at each hotspot
+#' Calculate how many times each species was reported at each hotspot
+#' 
+#' @param observations A tibble of eBird data
+#' @return A tibble with number of checklists reporting each species at each hotspot
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
 n_observations_per_hotspot <- function(observations) {
@@ -30,8 +36,10 @@ n_observations_per_hotspot <- function(observations) {
       tidyr::spread(key = .data$common_name, value = .data$n_sp_loc, fill = 0)
 }
 
-# return a matrix with the probability of seeing 
-# each species at each hotspot
+#' Calculate probability of seeing each species at each hotspot
+#' 
+#' @param observations A tibble of eBird data
+#' @return A matrix with probability of seeing each species at each hotspot
 probability_matrix <- function(observations) {
    
    effort_per_loc <- effort_per_hotspot(observations)
@@ -53,8 +61,11 @@ probability_matrix <- function(observations) {
 }
 
 
-# save a single prob_per_loc matrix
-
+#' Save a single prob_per_loc matrix for a specified county
+#' 
+#' @param observations A tibble of eBird data
+#' @param loc A string denoting the county code
+#' @return invisibly returns the prob_per_loc matrix
 #' @importFrom rlang .data
 write_prob_per_loc <- function(observations, loc){
    
@@ -69,7 +80,11 @@ write_prob_per_loc <- function(observations, loc){
    
 }
 
-# save a prob_per_loc matrix for every county in the dataset
+#' Save a prob_per_loc matrix for every county in the dataset
+#' 
+#' @param observations A tibble of eBird data
+#' @return invisibly returns the last prob_per_loc matrix written
+#' TODO this return behavior is kind of funky...
 write_probs_all_counties <- function(observations){
    
    counties <- unique(observations$county_code)
