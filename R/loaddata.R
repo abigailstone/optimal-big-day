@@ -74,7 +74,7 @@ if(FALSE){
    files <- list.files(auk::auk_get_ebd_path(), pattern='*.txt')
    write_data_main(files)
    
-   data <- read_csv('data/filtered.csv')
+   data <- readr::read_csv('data/filtered.csv')
    write_county_list(data)
    write_hotspot_list(data)
    
