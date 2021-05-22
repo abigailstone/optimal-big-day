@@ -16,7 +16,7 @@ effort_per_hotspot <- function(observations) {
          n_checklists = dplyr::n(),
          total_time = sum(.data$duration_minutes),
          med_time = stats::median(.data$duration_minutes),
-         iqr_time = stats::IQR(.data$duration_minutes),
+         iqr_time = stats::IQR(.data$duration_minutes, na.rm=TRUE),
          total_distance = sum(.data$effort_distance_km)
       ) %>% 
       dplyr::mutate(time_per_checklist = .data$total_time / .data$n_checklists) %>% 

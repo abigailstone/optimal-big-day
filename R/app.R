@@ -1,4 +1,4 @@
-# Define UI for application that draws a histogram
+# Define UI 
 #' @import shiny
 ui <- function() {tagList(
   tags$head(
@@ -9,8 +9,8 @@ ui <- function() {tagList(
       h2 {
         font-family: 'Courier New';
       }"))
-  ),
-  
+  ),  
+
   navbarPage(
     "Optimal Big Day",
     tabPanel(
@@ -51,7 +51,6 @@ ui <- function() {tagList(
   )
 )}
 
-# Define server logic required to draw a histogram
 #' @import shiny 
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -60,26 +59,31 @@ server <- function(input, output) {
   countycodes <- readr::read_csv('data_local/counties.csv')
   hotspots <- readr::read_csv('data_local/hotspots.csv')
   
+  
     output$stateSelect <- renderUI({
+      
         selectInput("stateSelect",
                     label = "Select a state: ", 
-                    choices = as.character(unique(countycodes$state)))
+                    choices = as.character(unique(countycodes$state)), 
+                    selected = "Vermont")
+      
     })
-    
-    
+
     output$countySelect <- renderUI({
-        counties <- as.list(countycodes[countycodes$state == input$stateSelect, "county"])
+      
+        counties <- countycodes[countycodes$state == input$stateSelect, "county"]
 
         selectInput("countySelect",
                     label = "Select a county:",
-                    choices = unique(counties))
+                    choices = unique(counties), 
+                    selected = "Addison")
     })
     
     output$includeThese <- renderUI({
 
         ccode <- countycodes[countycodes$county == input$countySelect, "county_code"]
       
-        hspots <- hotspots[hotspots$county_code == ccode, "locality"]
+        hspots <- hotspots[hotspots$county_code == as.character(ccode), "locality"]
 
         selectInput("includeThese",
                     label = "Include these: ",
@@ -89,7 +93,7 @@ server <- function(input, output) {
     })
     
     observeEvent(input$goButton, {
-
+      
         # get the county code for the current selection
         ccode <- countycodes[countycodes$county == input$countySelect, "county_code"] 
         
@@ -138,8 +142,7 @@ server <- function(input, output) {
     
     output$map <- leaflet::renderLeaflet({
         
-        # TODO: update zoom on county select
-        leaflet::leaflet() %>% 
+          leaflet::leaflet() %>% 
             leaflet::addTiles() %>% 
             leaflet::setView(-73, 44, 7)
     })
