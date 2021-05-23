@@ -110,6 +110,10 @@ server <- function(input, output) {
         # select best hotspots
         bestH <- select_hotspots(prob_per_loc, input$nHotspots, visitThese)
         
+        # separate the hotspots and the predicted total
+        pred_total <- tail(bestH, n=1)
+        bestH <- head(bestH, n=input$nHotspots)
+        
         # display the best results
         output$bestSpots <- renderUI({
             HTML(
@@ -118,7 +122,10 @@ server <- function(input, output) {
                        input$stateSelect,
                        ":</br> <ul> <li>", 
                        paste(bestH, collapse="</li> <li>"),
-                       "</li><ul></p>")
+                       "</li></ul></p>",
+                       "<p> Predicted total: ",
+                       as.character(floor(as.numeric(pred_total))),
+                       "</p>")
             )
         })
         

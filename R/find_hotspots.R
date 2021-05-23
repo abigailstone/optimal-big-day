@@ -88,7 +88,7 @@ select_hotspots <- function(probs, k, H=NULL){
       remaining_loc <- remaining_loc[!(remaining_loc %in% current_best)]
    }
    
-   return(H)
+   return(c(H, current_best))
 }
 
 if (FALSE) {
