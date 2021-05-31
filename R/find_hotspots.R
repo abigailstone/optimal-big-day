@@ -91,6 +91,34 @@ select_hotspots <- function(probs, k, H=NULL){
    return(c(H, current_best))
 }
 
+#' Return the expected number of species at each of the selected hotspots
+#' 
+#' @param hotspots a character vector of hotspots of interest 
+#' @param probs A tibble with the probability of observing each species at each locality
+#' @return A numerical vector with the expected number of species at each hotspot
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data 
+#' @examples 
+#' # hotspots <- c('Otter View Park', 'Button Bay State Park')
+#' # pred_hotspot_total(hotspots, prob_per_loc)
+pred_hotspot_total <- function(hotspots, probs){
+   
+   result <- NULL
+   print(hotspots)
+
+   for (i in 1:(length(hotspots)-1)){
+      h <- probs %>% 
+         dplyr::filter(.data$locality %in% hotspots[i])
+      
+      pred  <- rowSums(subset(h, select=-locality))
+      result <- c(result, pred)
+   }
+   
+   # TODO: return a tibble so name of hotspot is still linked ??
+   # TODO: show these values in the results that display in the app
+   return(result)
+}
+
 if (FALSE) {
    # get just probabilities in species x hotspot matrix
    prob_per_loc <- read_csv('data/prob_per_loc.csv')

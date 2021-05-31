@@ -109,6 +109,8 @@ server <- function(input, output) {
         
         # select best hotspots
         bestH <- select_hotspots(prob_per_loc, input$nHotspots, visitThese)
+        # TODO: display these in text output
+        predicted_totals <- pred_hotspot_total(bestH, prob_per_loc)
         
         # separate the hotspots and the predicted total
         pred_total <- tail(bestH, n=1)
