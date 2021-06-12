@@ -104,7 +104,7 @@ select_hotspots <- function(probs, k, H=NULL){
 pred_hotspot_total <- function(hotspots, probs){
    
    result <- NULL
-   print(hotspots)
+   # print(hotspots)
 
    for (i in 1:(length(hotspots)-1)){
       h <- probs %>% 
@@ -113,9 +113,7 @@ pred_hotspot_total <- function(hotspots, probs){
       pred  <- rowSums(subset(h, select=-locality))
       result <- c(result, pred)
    }
-   
-   # TODO: return a tibble so name of hotspot is still linked ??
-   # TODO: show these values in the results that display in the app
+
    return(result)
 }
 

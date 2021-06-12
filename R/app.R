@@ -116,17 +116,25 @@ server <- function(input, output) {
         pred_total <- tail(bestH, n=1)
         bestH <- head(bestH, n=input$nHotspots)
         
+        # append predicted totals at each hotspot to the hotspot name
+        bestH_probs <- paste(bestH, " (", 
+                             floor(as.numeric(predicted_totals)), 
+                             " species)",
+                             sep="")
+        
         # display the best results
         output$bestSpots <- renderUI({
             HTML(
                 paste0("</br> <p> Optimal hotspots in ",
                        input$countySelect, " County, ", 
                        input$stateSelect,
-                       ":</br> <ul> <li>", 
-                       paste(bestH, collapse="</li> <li>"),
+                       ":</br> <ul> <li>",
+                       # list formatting
+                       paste(bestH_probs, collapse="</li> <li>"),
                        "</li></ul></p>",
                        "<p> Predicted total: ",
                        as.character(floor(as.numeric(pred_total))),
+                       " species",
                        "</p>")
             )
         })
