@@ -98,6 +98,8 @@ select_hotspots <- function(probs, k, H=NULL){
 #' @return A numerical vector with the expected number of species at each hotspot
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data 
+#' @importFrom utils head tail
+#' @importFrom dplyr select
 #' @examples 
 #' # hotspots <- c('Otter View Park', 'Button Bay State Park')
 #' # pred_hotspot_total(hotspots, prob_per_loc)
@@ -110,7 +112,7 @@ pred_hotspot_total <- function(hotspots, probs){
       h <- probs %>% 
          dplyr::filter(.data$locality %in% hotspots[i])
       
-      pred  <- rowSums(subset(h, select=-locality))
+      pred  <- rowSums(select(h, -c('locality')))
       result <- c(result, pred)
    }
 
