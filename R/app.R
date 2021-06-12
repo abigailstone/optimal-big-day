@@ -109,7 +109,6 @@ server <- function(input, output) {
         
         # select best hotspots
         bestH <- select_hotspots(prob_per_loc, input$nHotspots, visitThese)
-        # TODO: display these in text output
         predicted_totals <- pred_hotspot_total(bestH, prob_per_loc)
         
         # separate the hotspots and the predicted total
@@ -142,7 +141,7 @@ server <- function(input, output) {
         # get hotspot locations
         pin_locations <- hotspots %>% 
             dplyr::filter(.data$locality %in% bestH) 
-        
+
         # update pins and map view
         leaflet::leafletProxy('map') %>% 
             leaflet::clearMarkers() %>%
@@ -153,7 +152,6 @@ server <- function(input, output) {
                         lat = mean(pin_locations$latitude),
                         9)
                 
-        
     })
     
     
@@ -170,3 +168,6 @@ server <- function(input, output) {
 myApp <- function(ui, server) {
   shiny::shinyApp(ui = ui, server = server)
 }
+
+
+myApp(ui(), server)
