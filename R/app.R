@@ -56,8 +56,8 @@ ui <- function() {tagList(
 #' @importFrom rlang .data
 server <- function(input, output) {
   
-  countycodes <- readr::read_csv('data_local/counties.csv')
-  hotspots <- readr::read_csv('data_local/hotspots.csv')
+  countycodes <- readr::read_csv('data_local/counties.csv', col_types = readr::cols())
+  hotspots <- readr::read_csv('data_local/hotspots.csv', col_types = readr::cols())
   
   
     output$stateSelect <- renderUI({
@@ -102,7 +102,7 @@ server <- function(input, output) {
         # get the prob_per_loc for this county
         filename <- paste('data_local/', ccode, '_prob_per_loc.csv', sep='')
         
-        prob_per_loc <- readr::read_csv(filename) %>% 
+        prob_per_loc <- readr::read_csv(filename, col_types = readr::cols()) %>% 
             drop_effort_cols()
         
         # filtering
