@@ -72,7 +72,7 @@ server <- function(input, output) {
     output$countySelect <- renderUI({
       
         req(input$stateSelect)
-        counties <- countycodes[countycodes$state == input$stateSelect, "county"]
+        counties <- as.list(countycodes[countycodes$state == input$stateSelect, "county"])
 
         selectInput("countySelect",
                     label = "Select a county:",
