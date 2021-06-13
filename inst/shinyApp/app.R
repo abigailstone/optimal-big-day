@@ -1,1 +1,0 @@
-optimalBigDay::launchApp()
