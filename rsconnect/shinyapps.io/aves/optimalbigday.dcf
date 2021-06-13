@@ -1,4 +1,4 @@
-name: optimalbigdaygolem
+name: optimalbigday
 title:
 username:
 account: aves
@@ -6,6 +6,6 @@ server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4265813
 bundleId: 4711623
-url: https://aves.shinyapps.io/optimalbigdaygolem/
+url: https://aves.shinyapps.io/optimalbigday/
 when: 1623602114.30246
 lastSyncTime: 1623602114.30247

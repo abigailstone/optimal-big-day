@@ -44,7 +44,7 @@ usethis::use_test( "app" )
 # Documentation
 
 ## Vignette ----
-usethis::use_vignette("optimalBigDayGolem")
+usethis::use_vignette("optimalBigDay")
 devtools::build_vignettes()
 
 ## Code Coverage----

@@ -13,20 +13,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-# optimalBigDayGolem
+# optimalBigDay
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of optimalBigDayGolem is to ...
+The goal of optimalBigDay is to ...
 
 ## Installation
 
-You can install the released version of optimalBigDayGolem from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of optimalBigDay from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("optimalBigDayGolem")
+install.packages("optimalBigDay")
 ```
 
 ## Example
@@ -34,7 +34,7 @@ install.packages("optimalBigDayGolem")
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
-library(optimalBigDayGolem)
+library(optimalBigDay)
 ## basic example code
 ```
 

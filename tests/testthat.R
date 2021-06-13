@@ -1,4 +1,4 @@
 library(testthat)
-library(optimalBigDayGolem)
+library(optimalBigDay)
 
-test_check("optimalBigDayGolem")
+test_check("optimalBigDay")
