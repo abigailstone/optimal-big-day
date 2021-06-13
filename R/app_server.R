@@ -33,6 +33,23 @@ app_server <- function( input, output, session ) {
                 selected = "Addison")
   })
   
+  output$nHotspots <- renderUI({
+    
+    req(input$countySelect)
+    ccode <- countycodes[countycodes$county == input$countySelect, "county_code"]
+    hspots <- hotspots[hotspots$county_code == as.character(ccode), "locality"]
+    n_hspots <- nrow(hspots)
+    print(hspots)
+    
+    numericInput("nHotspots",
+                 label = "Number of hotspots to visit:",
+                 value = 5,
+                 min = 1, 
+                 # limit to number of hotspots in the county
+                 max = min(15, n_hspots)) 
+    
+  })
+  
   output$includeThese <- renderUI({
     
     req(input$countySelect)
@@ -42,7 +59,7 @@ app_server <- function( input, output, session ) {
     
     selectInput("includeThese",
                 label = "Include these: ",
-                choices = unique(hspots),
+                choices = unique(hspots), #TODO is this unique() needed?
                 selected = NULL,
                 multiple = TRUE)
   })

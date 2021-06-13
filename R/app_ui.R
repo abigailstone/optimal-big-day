@@ -32,11 +32,7 @@ app_ui <- function(request) {
                 
                 htmlOutput("countySelect"),
                 
-                numericInput("nHotspots",
-                             label = "Number of hotspots to visit:",
-                             value = 5,
-                             min = 1, 
-                             max = 15),
+                htmlOutput("nHotspots"),
                 
                 htmlOutput("includeThese"),
                 
