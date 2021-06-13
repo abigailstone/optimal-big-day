@@ -1,8 +1,19 @@
 Package: optimalBigDayGolem
-Title: PKG_TITLE
+Title: Determine How to See the Most Species Using eBird Data
 Version: 0.0.0.9000
-Authors@R: person('AUTHOR_FIRST', 'AUTHOR_LAST', email = 'AUTHOR@MAIL.COM', role = c('cre', 'aut'))
-Description: PKG_DESC.
+Authors@R: 
+    person(given = "Abigail",
+           family = "Stone",
+           role = c("aut", "cre"),
+           email = "stone.abigail@gmail.com")    
+    person(given = "Myles",
+           family = "Stokowski",
+           role = c("aut", "cre"),
+           email = "mstokowski@middlebury.edu")
+Description: Tools to optimize how to see the highest number of bird species
+    in one day, using eBird data. This package contains both functions for
+    processing eBird data to figure out how to see most birds, and a Shiny 
+    application for interacting with these tools.
 License: MIT + file LICENSE
 Imports: 
     auk,
