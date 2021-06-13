@@ -71,7 +71,7 @@ if(FALSE){
       stop("please set ebd path with auk::auk_set_ebd_path(YOUR_EBD_PATH)")
    }
    
-   files <- list.files(auk::auk_get_ebd_path(), pattern='*.txt')
+   files <- list.files(auk::auk_get_ebd_path(), pattern='ebd.*.txt')
    write_data_main(files)
    
    data <- readr::read_csv('data_local/filtered.csv')
