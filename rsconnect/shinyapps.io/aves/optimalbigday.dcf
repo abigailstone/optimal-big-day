@@ -1,11 +1,13 @@
-name: optimalbigday
-title:
+name: optimalBigDay
+title: optimalBigDay
 username:
 account: aves
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 4265813
-bundleId: 4711623
-url: https://aves.shinyapps.io/optimalbigday/
-when: 1623602114.30246
-lastSyncTime: 1623602114.30247
+appId: 4266153
+bundleId: 4711883
+url: https://aves.shinyapps.io/optimalBigDay/
+when: 1623609578.18374
+lastSyncTime: 1623609578.18376
+asMultiple: FALSE
+asStatic: FALSE
