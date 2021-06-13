@@ -1,0 +1,39 @@
+Package: optimalBigDay
+Title: Determine How to See the Most Species Using eBird Data
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Abigail",
+           family = "Stone",
+           role = c("aut", "cre"),
+           email = "stone.abigail@gmail.com")    
+    person(given = "Myles",
+           family = "Stokowski",
+           role = c("aut", "cre"),
+           email = "mstokowski@middlebury.edu")
+Description: Tools to optimize how to see the highest number of bird species
+    in one day, using eBird data. This package contains both functions for
+    processing eBird data to figure out how to see most birds, and a Shiny 
+    application for interacting with these tools.
+License: MIT + file LICENSE
+Imports: 
+    auk,
+    config (>= 0.3.1),
+    dplyr,
+    golem (>= 0.3.1),
+    leaflet,
+    magrittr,
+    pkgload,
+    processx,
+    readr,
+    rlang,
+    shiny (>= 1.6.0),
+    stats,
+    tidyr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
