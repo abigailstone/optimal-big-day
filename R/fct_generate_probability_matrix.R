@@ -76,7 +76,7 @@ write_prob_per_loc <- function(observations, loc){
    prob_per_loc <- probability_matrix(observations)
    
    # assumes that a data folder has been created in current working directory
-   readr::write_csv(prob_per_loc, paste('data/', loc, '_prob_per_loc.csv', sep=''))
+   readr::write_csv(prob_per_loc, paste('data_local/', loc, '_prob_per_loc.csv', sep=''))
    
 }
 
@@ -97,7 +97,7 @@ write_probs_all_counties <- function(observations){
 
 # turning this off so that sourcing the file just loads the functions
 if (FALSE) {
-   observations <- read_csv('data/filtered.csv')
+   observations <- read_csv('data_local/filtered.csv')
    write_probs_all_counties(observations)
 }
 

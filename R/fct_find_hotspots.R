@@ -121,7 +121,7 @@ pred_hotspot_total <- function(hotspots, probs){
 
 if (FALSE) {
    # get just probabilities in species x hotspot matrix
-   prob_per_loc <- read_csv('data/prob_per_loc.csv')
+   prob_per_loc <- read_csv('data_local/prob_per_loc.csv')
    prob_per_loc <- drop_effort_cols(prob_per_loc)
    best_H <- select_hotspots(prob_per_loc, 5)
    print(best_H)

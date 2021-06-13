@@ -4,7 +4,7 @@
 write_data_main <- function(files){
    
    ebd_data <- NULL
-   f_out <- 'data/ebd_filtered.txt'
+   f_out <- 'data_local/ebd_filtered.txt'
    
    # columns to keep for filtering
    cols <- c('group_identifier', 'sampling_event_identifier', 'observer_id',
@@ -39,7 +39,7 @@ write_data_main <- function(files){
    }
    
    # save the filtered data
-   readr::write_csv(ebd_data, 'data/filtered.csv')
+   readr::write_csv(ebd_data, 'data_local/filtered.csv')
    
 }
 
@@ -50,7 +50,7 @@ write_county_list <- function(data) {
       dplyr::group_by(.data$state, .data$county) %>% 
       dplyr::summarise(county_code = dplyr::first(.data$county_code),
                 .groups = 'drop') %>% 
-      readr::write_csv('data/counties.csv') 
+      readr::write_csv('data_local/counties.csv') 
 }
 
 # hotspot list 
@@ -61,7 +61,7 @@ write_hotspot_list <- function(data) {
       dplyr::summarise(latitude = dplyr::first(.data$latitude),
                 longitude = dplyr::first(.data$longitude),
                 .groups = 'drop') %>%
-      readr::write_csv('data/hotspots.csv')
+      readr::write_csv('data_local/hotspots.csv')
 }
 
 
@@ -74,7 +74,7 @@ if(FALSE){
    files <- list.files(auk::auk_get_ebd_path(), pattern='*.txt')
    write_data_main(files)
    
-   data <- readr::read_csv('data/filtered.csv')
+   data <- readr::read_csv('data_local/filtered.csv')
    write_county_list(data)
    write_hotspot_list(data)
    
