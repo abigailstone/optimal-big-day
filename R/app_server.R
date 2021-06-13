@@ -57,11 +57,13 @@ app_server <- function( input, output, session ) {
     
     hspots <- hotspots[hotspots$county_code == as.character(ccode), "locality"]
     
-    selectInput("includeThese",
+    selectizeInput("includeThese",
                 label = "Include these: ",
                 choices = unique(hspots), #TODO is this unique() needed?
                 selected = NULL,
-                multiple = TRUE)
+                multiple = TRUE, 
+                # limit to the number of hotspots to visit
+                options = list(maxItems = input$nHotspots))
   })
   
   observeEvent(input$goButton, {
