@@ -1,12 +1,17 @@
 #' Drop effort columns from prob_per_loc
 #' 
+#' @importFrom auk ebirdSpecies
 #' @param prob_per_loc A tibble with the probability of observing each species at each locality
 #' @return A new copy of prob_per_loc without the effort columns
 #' @examples
 #' # drop_effort_cols(prob_per_loc)
 drop_effort_cols <- function(prob_per_loc) {
-   dplyr::select(prob_per_loc, -c('n_checklists', 'total_time', 'med_time', 
-                                  'iqr_time', 'total_distance', 'time_per_checklist'))
+   
+   which_cols <- 
+      !is.na(ebird_species(colnames(prob_per_loc))) | 
+      colnames(prob_per_loc) == "locality"
+   
+   prob_per_loc[, which_cols]
 }
 
 #' Select the location with the highest probability sum 
