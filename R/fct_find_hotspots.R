@@ -1,6 +1,5 @@
 #' Drop effort columns from prob_per_loc
 #' 
-#' @importFrom auk ebirdSpecies
 #' @param prob_per_loc A tibble with the probability of observing each species at each locality
 #' @return A new copy of prob_per_loc without the effort columns
 #' @examples
@@ -8,7 +7,7 @@
 drop_effort_cols <- function(prob_per_loc) {
    
    which_cols <- 
-      !is.na(ebird_species(colnames(prob_per_loc))) | 
+      !is.na(auk::ebird_species(colnames(prob_per_loc))) | 
       colnames(prob_per_loc) == "locality"
    
    prob_per_loc[, which_cols]
