@@ -39,8 +39,7 @@ app_server <- function( input, output, session ) {
     ccode <- countycodes[countycodes$county == input$countySelect, "county_code"]
     hspots <- hotspots[hotspots$county_code == as.character(ccode), "locality"]
     n_hspots <- nrow(hspots)
-    print(hspots)
-    
+
     numericInput("nHotspots",
                  label = "Number of hotspots to visit:",
                  value = 5,
@@ -58,8 +57,8 @@ app_server <- function( input, output, session ) {
     hspots <- hotspots[hotspots$county_code == as.character(ccode), "locality"]
     
     selectizeInput("includeThese",
-                label = "Include these: ",
-                choices = unique(hspots), #TODO is this unique() needed?
+                label = "Include these hotspots: ",
+                choices = hspots,
                 selected = NULL,
                 multiple = TRUE, 
                 # limit to the number of hotspots to visit
@@ -121,7 +120,10 @@ app_server <- function( input, output, session ) {
       leaflet::clearMarkers() %>%
       leaflet::addMarkers(lng = pin_locations$longitude, 
                           lat = pin_locations$latitude,
-                          popup = paste("<b>", pin_locations$locality, "</b><br>")) %>% 
+                          popup = paste0(
+                            '<a href="', 'https://ebird.org/hotspot/', 
+                            pin_locations$locality_id, '">', 
+                            pin_locations$locality, '</a>')) %>% 
       leaflet::setView(lng = mean(pin_locations$longitude),
                        lat = mean(pin_locations$latitude),
                        9)
