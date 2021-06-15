@@ -112,7 +112,7 @@ select_hotspots <- function(probs, k, H=NULL){
 #' @export
 #' @examples 
 #' hotspots <- c('Otter View Park', 'Button Bay State Park')
-#' pred_hotspot_total(hotspots, prob_per_loc)
+#' pred_hotspot_total(hotspots, drop_effort_cols(sample_prob_per_loc))
 pred_hotspot_total <- function(hotspots, probs){
    
    result <- NULL
