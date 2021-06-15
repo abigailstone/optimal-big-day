@@ -22,7 +22,7 @@ drop_effort_cols <- function(prob_per_loc) {
 #' @examples 
 #' get_first_best(drop_effort_cols(sample_prob_per_loc))
 get_first_best <- function(probs) {
-   probs[which.max(rowSums(probs[2:ncol(probs)])), "locality"]
+   probs[[which.max(rowSums(probs[2:ncol(probs)])), "locality"]]
 }
 
 

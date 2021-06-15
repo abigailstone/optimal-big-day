@@ -11,3 +11,10 @@ test_that("drop_effort_cols doesn't change number of rows", {
   expect_equal(nrow(drop_effort_cols(sample_prob_per_loc)), 
                nrow(sample_prob_per_loc))
 })
+
+test_that("get_first_best returns correct type", {
+  probs <- drop_effort_cols(sample_prob_per_loc)
+  expect_type(get_first_best(probs), "character")
+})
+
+
