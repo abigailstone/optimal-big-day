@@ -1,7 +1,7 @@
 # load all of the data in the auk_ebd path 
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
-write_data_main <- function(files){
+write_data_main <- function(files, write = TRUE) {
    
    ebd_data <- NULL
    f_out <- 'data_local/ebd_filtered.txt'
@@ -38,32 +38,47 @@ write_data_main <- function(files){
       
    }
    
-   # save the filtered data
-   readr::write_csv(ebd_data, 'data_local/filtered.csv')
-   
+   if (write) {
+      # save the filtered data
+      readr::write_csv(ebd_data, 'data_local/filtered.csv')
+   } else {
+      ebd_data
+   }
 }
 
 # county list 
 #' @importFrom rlang .data
-write_county_list <- function(data) {
-   data %>% 
+write_county_list <- function(data, write = TRUE) {
+   counties <- data %>% 
       dplyr::group_by(.data$state, .data$county) %>% 
       dplyr::summarise(county_code = dplyr::first(.data$county_code),
-                .groups = 'drop') %>% 
-      readr::write_csv('data_local/counties.csv') 
+                .groups = 'drop')
+   
+   if (write) {
+      readr::write_csv(counties, 'data_local/counties.csv') 
+   } else {
+      counties
+   }
+      
 }
 
 # hotspot list 
 #' @importFrom rlang .data
-write_hotspot_list <- function(data) {
-   data %>% 
+write_hotspot_list <- function(data, write = TRUE) {
+   hotspots <- data %>% 
       dplyr::group_by(.data$county_code, .data$locality) %>% 
       dplyr::summarise(
          locality_id = dplyr::first(.data$locality_id),
          latitude = dplyr::first(.data$latitude),
          longitude = dplyr::first(.data$longitude),
-         .groups = 'drop') %>%
-      readr::write_csv('data_local/hotspots.csv')
+         .groups = 'drop')
+   
+   if (write) {
+      readr::write_csv(hotspots, 'data_local/hotspots.csv')
+   } else {
+      hotspots
+   }
+      
 }
 
 
