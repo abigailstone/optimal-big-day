@@ -16,11 +16,11 @@ drop_effort_cols <- function(prob_per_loc) {
 #' Select the location with the highest probability sum 
 #' 
 #' @param probs A tibble with the probability of observing each species at each locality
-#' @return A tibble row corresponding to the location with the highest expected number of species
+#' @return The name of the location with the highest expected number of species
 #' @examples 
-#' # get_first_best(drop_effort_cols(probs))
+#' # get_first_best(drop_effort_cols(sample_prob_per_loc))
 get_first_best <- function(probs) {
-   probs[which.max(rowSums(probs[2:ncol(probs)])),]
+   probs[which.max(rowSums(probs[2:ncol(probs)])), "locality"]
 }
 
 
@@ -60,7 +60,7 @@ select_hotspots <- function(probs, k, H=NULL){
    
    if (is.null(H)){
       # select the initial best hotspot 
-      H <- get_first_best(probs)[['locality']]
+      H <- get_first_best(probs)
    } 
    
    remaining_loc <- hotspots[!(hotspots %in% H)]

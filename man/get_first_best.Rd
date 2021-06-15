@@ -10,11 +10,11 @@ get_first_best(probs)
 \item{probs}{A tibble with the probability of observing each species at each locality}
 }
 \value{
-A tibble row corresponding to the location with the highest expected number of species
+The name of the location with the highest expected number of species
 }
 \description{
 Select the location with the highest probability sum
 }
 \examples{
-# get_first_best(drop_effort_cols(probs))
+# get_first_best(drop_effort_cols(sample_prob_per_loc))
 }
