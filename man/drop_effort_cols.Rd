@@ -16,5 +16,5 @@ A new copy of prob_per_loc without the effort columns
 Drop effort columns from prob_per_loc
 }
 \examples{
-# drop_effort_cols(prob_per_loc)
+drop_effort_cols(sample_prob_per_loc)
 }

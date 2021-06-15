@@ -17,6 +17,7 @@ select_hotspots(probs, k, H = NULL)
 Greedy selection algorithm to select the k optimal hotspots to visit
 }
 \examples{
-# hotspots <- c('Otter View Park', 'Button Bay State Park')
-# select_hotspots(prob_per_loc, 5, hotspots)
+# Not run because of long runtime
+hotspots <- c('Otter View Park', 'Button Bay State Park')
+select_hotspots(drop_effort_cols(prob_per_loc), 5, hotspots)
 }

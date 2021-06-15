@@ -18,6 +18,6 @@ A numerical vector with the expected number of species at each hotspot
 Return the expected number of species at each of the selected hotspots
 }
 \examples{
-# hotspots <- c('Otter View Park', 'Button Bay State Park')
-# pred_hotspot_total(hotspots, prob_per_loc)
+hotspots <- c('Otter View Park', 'Button Bay State Park')
+pred_hotspot_total(hotspots, prob_per_loc)
 }

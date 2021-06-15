@@ -18,6 +18,6 @@ A named numerical vector of the probability of observing each species at the giv
 Calculate the probability of seeing each species for a given set of hotspots
 }
 \examples{
-# hotspots <- c('Otter View Park', 'Button Bay State Park')
-# prob_hotspots(hotspots, prob_per_loc)
+hotspots <- c('Otter View Park', 'Button Bay State Park')
+prob_hotspots(hotspots, drop_effort_cols(sample_prob_per_loc))
 }
