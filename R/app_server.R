@@ -25,7 +25,7 @@ app_server <- function( input, output, session ) {
   output$countySelect <- renderUI({
     
     req(input$stateSelect)
-    counties <- as.list(countycodes[countycodes$state == input$stateSelect, "county"])
+    counties <- countycodes[countycodes$state == input$stateSelect, "county"]
     
     selectInput("countySelect",
                 label = "Select a county:",
