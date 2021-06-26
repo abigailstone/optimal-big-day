@@ -1,20 +1,20 @@
 Package: optimalBigDay
 Title: Determine How to See the Most Species Using eBird Data
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Abigail",
-           family = "Stone",
+Authors@R: c(
+    person("Abigail", "Stone",
            role = c("aut", "cre"),
-           email = "stone.abigail@gmail.com")    
-    person(given = "Myles",
-           family = "Stokowski",
+           email = "stone.abigail@gmail.com"),    
+    person("Myles", "Stokowski",
            role = c("aut", "cre"),
            email = "mstokowski@middlebury.edu")
+           )
 Description: Tools to optimize how to see the highest number of bird species
     in one day, using eBird data. This package contains both functions for
     processing eBird data to figure out how to see most birds, and a Shiny 
     application for interacting with these tools.
 License: MIT + file LICENSE
+URL: https://aves.shinyapps.io/optimalBigDay/
 Imports: 
     auk,
     config (>= 0.3.1),
