@@ -97,7 +97,7 @@ select_hotspots <- function(probs, k, H=NULL){
       remaining_loc <- remaining_loc[!(remaining_loc %in% current_best)]
    }
    
-   return(c(H, current_best))
+   return(H)
 }
 
 #' Return the expected number of species at each of the selected hotspots
@@ -112,22 +112,45 @@ select_hotspots <- function(probs, k, H=NULL){
 #' @export
 #' @examples 
 #' hotspots <- c('Otter View Park', 'Button Bay State Park')
-#' pred_hotspot_total(hotspots, drop_effort_cols(sample_prob_per_loc))
-pred_hotspot_total <- function(hotspots, probs){
+#' pred_hotspot_totals(hotspots, drop_effort_cols(sample_prob_per_loc))
+pred_hotspot_totals <- function(hotspots, probs){
    
-   result <- NULL
-   # print(hotspots)
+   locality_totals <- NULL
 
-   for (i in 1:(length(hotspots)-1)){
+   for (i in 1:(length(hotspots))){
       h <- probs %>% 
          dplyr::filter(.data$locality %in% hotspots[i])
       
       pred  <- rowSums(select(h, -c('locality')))
-      result <- c(result, pred)
+      locality_totals <- c(locality_totals, pred)
    }
+   
+   total_sum <- sum(prob_hotspots(hotspots, probs))
 
-   return(result)
+   return(locality_totals)
 }
+
+#' Return the total expected number of species if visiting all suggested hotspots
+#'
+#' @param hotspots a character vector of hotspots of interest
+#' @param probs A tibble with the probability of observing each species at each locality 
+#' @return A numerical value - the predicted total of species at this set of hotspots 
+#' @importFrom magrittr %>% 
+#' @importFrom rlang .data 
+#' @export
+#' @examples 
+#' hotspots <- ('Otter View Park', 'Hurd Grassland')
+#' pred_total(hotspots, drop_effort_cols(sample_prob_per_loc))
+pred_total <- function(hotspots, probs){
+   
+   h <- probs %>% 
+      dplyr::filter(.data$locality %in% hotspots)
+   
+   total <- sum(prob_hotspots(hotspots, probs))
+   
+   return(total)
+}
+
 
 if (FALSE) {
    # get just probabilities in species x hotspot matrix

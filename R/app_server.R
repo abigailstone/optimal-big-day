@@ -73,6 +73,7 @@ app_server <- function( input, output, session ) {
     # get the prob_per_loc for this county
     filename <- paste('data_local/', ccode, '_prob_per_loc.csv', sep='')
     
+    # read the prob_per_loc for this county 
     prob_per_loc <- readr::read_csv(filename, col_types = readr::cols()) %>% 
       drop_effort_cols()
     
@@ -82,11 +83,10 @@ app_server <- function( input, output, session ) {
     
     # select best hotspots
     bestH <- select_hotspots(prob_per_loc, input$nHotspots, visitThese)
-    predicted_totals <- pred_hotspot_total(bestH, prob_per_loc)
     
-    # separate the hotspots and the predicted total
-    pred_total <- tail(bestH, n=1)
-    bestH <- head(bestH, n=input$nHotspots)
+    # get predicted locality totals and the predicted overall total
+    predicted_totals <- pred_hotspot_totals(bestH, prob_per_loc)
+    summary_total <- pred_total(bestH, prob_per_loc)
     
     # append predicted totals at each hotspot to the hotspot name
     bestH_probs <- paste(bestH, " (", 
@@ -105,7 +105,7 @@ app_server <- function( input, output, session ) {
                paste(bestH_probs, collapse="</li> <li>"),
                "</li></ul></p>",
                "<p> Predicted total: ",
-               as.character(floor(as.numeric(pred_total))),
+               as.character(floor(as.numeric(summary_total))),
                " species",
                "</p>")
       )
