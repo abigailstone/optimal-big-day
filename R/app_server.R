@@ -98,8 +98,8 @@ app_server <- function( input, output, session ) {
     output$bestSpots <- renderUI({
       HTML(
         paste0("</br> <p> Optimal hotspots in ",
-               input$countySelect, " County, ", 
-               input$stateSelect,
+               isolate(input$countySelect), " County, ", 
+               isolate(input$stateSelect),
                ":</br> <ul> <li>",
                # list formatting
                paste(bestH_probs, collapse="</li> <li>"),
