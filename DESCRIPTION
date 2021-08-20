@@ -6,7 +6,7 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "stone.abigail@gmail.com"),    
     person("Myles", "Stokowski",
-           role = c("aut", "cre"),
+           role = c("aut"),
            email = "mstokowski@middlebury.edu")
            )
 Description: Tools to optimize how to see the highest number of bird species

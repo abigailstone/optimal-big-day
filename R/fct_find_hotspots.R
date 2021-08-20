@@ -139,7 +139,7 @@ pred_hotspot_totals <- function(hotspots, probs){
 #' @importFrom rlang .data 
 #' @export
 #' @examples 
-#' hotspots <- ('Otter View Park', 'Hurd Grassland')
+#' hotspots <- c('Otter View Park', 'Hurd Grassland')
 #' pred_total(hotspots, drop_effort_cols(sample_prob_per_loc))
 pred_total <- function(hotspots, probs){
    

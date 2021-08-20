@@ -2,7 +2,8 @@
 
 export(drop_effort_cols)
 export(get_first_best)
-export(pred_hotspot_total)
+export(pred_hotspot_totals)
+export(pred_total)
 export(prob_hotspots)
 export(run_app)
 export(select_hotspots)
