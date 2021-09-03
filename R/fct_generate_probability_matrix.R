@@ -10,7 +10,7 @@ effort_per_hotspot <- function(observations) {
    observations %>% 
       # filter(county_code == 'US-VT-001') %>%
       dplyr::mutate(effort_distance_km = ifelse(is.na(.data$effort_distance_km), 0, .data$effort_distance_km)) %>% # handle stationary lists
-      dplyr::distinct(.data$checklist_id, .keep_all = TRUE) %>%
+      dplyr::distinct(.data$sampling_event_identifier, .keep_all = TRUE) %>%
       dplyr::group_by(.data$locality) %>% 
       dplyr::summarize(
          n_checklists = dplyr::n(),
@@ -89,10 +89,17 @@ write_probs_all_counties <- function(observations){
    
    counties <- unique(observations$county_code)
    
+   n_counties <- length(counties)
+   
+   ith <- 0
+   
    for(i in counties){ 
       write_prob_per_loc(observations, i)
+      ith <- ith + 1
+      if (ith %% 500 == 0) {
+         print(paste(ith, '/', n_counties, 'written'))
+      }
    }
-   
 }
 
 # turning this off so that sourcing the file just loads the functions
