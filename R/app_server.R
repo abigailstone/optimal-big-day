@@ -36,7 +36,8 @@ app_server <- function( input, output, session ) {
   output$nHotspots <- renderUI({
     
     req(input$countySelect)
-    ccode <- countycodes[countycodes$county == input$countySelect, "county_code"]
+    ccode <- countycodes[countycodes$county == input$countySelect & 
+                           countycodes$state == input$stateSelect, "county_code"]
     hspots <- hotspots[hotspots$county_code == as.character(ccode), "locality"]
     n_hspots <- nrow(hspots)
 
@@ -68,7 +69,8 @@ app_server <- function( input, output, session ) {
   observeEvent(input$goButton, {
     
     # get the county code for the current selection
-    ccode <- countycodes[countycodes$county == input$countySelect, "county_code"] 
+    ccode <- countycodes[countycodes$county == input$countySelect & 
+                           countycodes$state == input$stateSelect, "county_code"]
     
     # get the prob_per_loc for this county
     filename <- paste('data_local/', ccode, '_prob_per_loc.csv', sep='')
