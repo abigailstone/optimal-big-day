@@ -46,13 +46,22 @@ write_data_main <- function(files, write = TRUE) {
    }
 }
 
+
 # county list 
 #' @importFrom rlang .data
 write_county_list <- function(data, write = TRUE) {
+   
+   # we only want county codes for which there is a prob_per_loc
+   countycodes <- 
+      stringr::str_subset(list.files('data_local/'), 
+                          '_prob_per_loc.csv') %>%
+      stringr::str_sub(1, 9)
+   
    counties <- data %>% 
       dplyr::group_by(.data$state, .data$county) %>% 
       dplyr::summarise(county_code = dplyr::first(.data$county_code),
-                .groups = 'drop')
+                .groups = 'drop') %>% 
+      dplyr::filter(county_code %in% countycodes)
    
    if (write) {
       readr::write_csv(counties, 'data_local/counties.csv') 
@@ -65,6 +74,8 @@ write_county_list <- function(data, write = TRUE) {
 # hotspot list 
 #' @importFrom rlang .data
 write_hotspot_list <- function(data, write = TRUE) {
+   
+   # get all the hotspots in the data - inluding locality ID and coordinates
    hotspots <- data %>% 
       dplyr::group_by(.data$county_code, .data$locality) %>% 
       dplyr::summarise(
@@ -73,6 +84,26 @@ write_hotspot_list <- function(data, write = TRUE) {
          longitude = dplyr::first(.data$longitude),
          .groups = 'drop')
    
+   # get a list of valid hotspots based on the prob_per_locs
+   valid_hotspots <-  
+      stringr::str_subset(list.files('data_local/'), 
+                                     '_prob_per_loc.csv') %>% 
+      lapply(function(x) {
+         
+         county_code <- stringr::str_sub(x, 1, 9)
+            
+         readr::read_csv(paste0('data_local/', x),
+                         show_col_types = FALSE) %>%
+            dplyr::transmute(locality,
+                      county_code) }) %>%
+      dplyr::bind_rows()
+   
+   # join the two to get a list of all valid hotspots, complete with
+   # locality ID and coordinates
+   hotspots <- dplyr:::inner_join(valid_hotspots, 
+                                  hotspots, 
+                                  by = c('county_code', 'locality'))
+      
    if (write) {
       readr::write_csv(hotspots, 'data_local/hotspots.csv')
    } else {

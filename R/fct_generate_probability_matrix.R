@@ -8,7 +8,6 @@
 #' @importFrom rlang .data
 effort_per_hotspot <- function(observations) {
    observations %>% 
-      # filter(county_code == 'US-VT-001') %>%
       dplyr::mutate(effort_distance_km = ifelse(is.na(.data$effort_distance_km), 0, .data$effort_distance_km)) %>% # handle stationary lists
       dplyr::distinct(.data$sampling_event_identifier, .keep_all = TRUE) %>%
       dplyr::group_by(.data$locality) %>% 
@@ -43,6 +42,13 @@ n_observations_per_hotspot <- function(observations) {
 probability_matrix <- function(observations) {
    
    effort_per_loc <- effort_per_hotspot(observations)
+   
+   # if there are very few (fewer than 5) valid hotspots, then there's not much 
+   # point in running the rest of the algorithm
+   if (nrow(effort_per_loc) < 5) {
+      return(NA)
+   }
+   
    counts_per_loc <- n_observations_per_hotspot(observations)
    
    # join species frequency and effort information
@@ -76,7 +82,9 @@ write_prob_per_loc <- function(observations, loc){
    prob_per_loc <- probability_matrix(observations)
    
    # assumes that a data folder has been created in current working directory
-   readr::write_csv(prob_per_loc, paste('data_local/', loc, '_prob_per_loc.csv', sep=''))
+   if (!is.na(prob_per_loc)) {
+      readr::write_csv(prob_per_loc, paste('data_local/', loc, '_prob_per_loc.csv', sep=''))
+   }
    
 }
 
