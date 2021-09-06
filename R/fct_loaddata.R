@@ -79,7 +79,7 @@ write_hotspot_list <- function(data, write = TRUE) {
    hotspots <- data %>% 
       dplyr::group_by(.data$county_code, .data$locality) %>% 
       dplyr::summarise(
-         locality_id = dplyr::first(.data$locality_id),
+         # locality_id = dplyr::first(.data$locality_id),
          latitude = dplyr::first(.data$latitude),
          longitude = dplyr::first(.data$longitude),
          .groups = 'drop')
