@@ -71,7 +71,7 @@ select_hotspots <- function(probs, k, H=NULL){
    remaining_loc <- hotspots[!(hotspots %in% H)]
    
    # iterate for the number of hotspots we want to select
-   for (i in 1:(k-length(H))){
+   for (i in seq_len(k-length(H))){
    
       remaining_probs <- probs %>% 
          dplyr::filter(.data$locality %in% remaining_loc) 
